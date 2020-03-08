@@ -75,10 +75,10 @@ def polynomial(n, t, coefs):
         values[i] = values[i - 1] + y
 
     for j in range(n + 1):
-        print('{0:<9}  '.format(diffs[j][(len(diffs[0]) // 2) - (j // 2)]), end=" ")  # используемые разделенные разности
+        print('{0:<9} '.format(diffs[j][(len(diffs[0]) // 2) - (j // 2)]), end='')  # используемые разделенные разности
     print('используемые разделенные разности ')
     for j in range(n + 1):
-        print('{0:<9} '.format(round(coefs[j] * diffs[j][(len(diffs[0]) // 2) - (j // 2)], 5)), end=" ")
+        print('{0:<9} '.format(round(coefs[j] * diffs[j][(len(diffs[0]) // 2) - (j // 2)], 5)), end='')
     print('N_k * \u0394k(y0) ')
     return values
 
@@ -110,21 +110,21 @@ print('{0:<9} {1:<9} {2:<9} {3:<9} {4:<9}'.format('0', '1', '2', '3', '4'))
 
 coefs = coefficient(n, t)
 for i in range(n + 1):
-    print('{0:<9} '.format(coefs[i]), end=' ')  # печать коэффициентов полинома
-print('')
-# print('коэффициенты N_k полинома')
+    print('{0:<9} '.format(coefs[i]), end='')  # печать коэффициентов полинома
+print('коэффициенты N_k полинома')
+
 values = polynomial(n, t, coefs)
 
 for j in range(n + 1):
-    print('{0:<9}'.format(values[j]), end=' ')  # печать значений полинома
+    print('{0:<9} '.format(values[j]), end='')  # печать значений полинома
 print('значения полинома')
 
 for j in range(n + 1):
-    print('{0:<9}'.format(round(f(x) - values[j], 5)), end=' ')  # печать фактической погрешности
+    print('{0:<9} '.format(round(f(x) - values[j], 5)), end='')  # печать фактической погрешности
 print('фактическая погрешность')
 
 modules = estimate_mod_der(n)
 est_errors = estimate_err(modules, coefs)
 for i in range(n + 1):
-    print('{0:<9} '.format(est_errors[i]), end=' ')  # печать оценки погрешности
+    print('{0:<9} '.format(est_errors[i]), end='')  # печать оценки погрешности
 print( 'оценка погрешности')
