@@ -105,6 +105,10 @@ def estimate_err(modules, coefs):
 
 
 # main
+table(n)
+
+print('\n')
+
 t = (x - a) / h
 print('{0:<9} {1:<9} {2:<9} {3:<9} {4:<9}'.format('0', '1', '2', '3', '4'))
 
@@ -127,4 +131,4 @@ modules = estimate_mod_der(n)
 est_errors = estimate_err(modules, coefs)
 for i in range(n + 1):
     print('{0:<9} '.format(est_errors[i]), end='')  # печать оценки погрешности
-print( 'оценка погрешности')
+print('оценка погрешности')
