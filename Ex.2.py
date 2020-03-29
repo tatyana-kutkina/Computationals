@@ -1,5 +1,6 @@
 import math
-from Lagrange import Lagrange
+import Lagrange
+
 
 
 # нам дана точка f(x)=0.8, найти х по интерполяционному многочлену
@@ -70,7 +71,7 @@ arr1 = -0.6, -0.5, -0.3, -0.2, -0.1, 0
 values = [f(arr1[i]) for i in range(len(arr1))]
 
 # счиатем полином Лагранжа
-polynomial = Lagrange(arr1, values)
+polynomial = Lagrange.Lagrange(arr1, values)
 
 y_0 = 0.8
 a = 0
