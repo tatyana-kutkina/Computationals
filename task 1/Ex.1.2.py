@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from scipy.misc import derivative
+import pandas as pd
 
 print('Даны функция: f(x) = sin(x)', '\n', 'отрезок: [0.5 , 1.5]', '\n', 'точка х: х = 1.05')
 x = 1.05
@@ -9,6 +10,11 @@ print('Шаг интерполяции h = 0.1')
 h = 0.1
 print('Порядок интерполирования n = 4 ')
 n = 4
+
+# увеличиваем ширину печати dataframe
+pd.options.display.max_columns = 20
+desired_width = 400
+pd.set_option('display.width', desired_width)
 
 
 def f(x):
@@ -28,19 +34,31 @@ def delta(n, arr):
 # считаем и печатаем таблицу разделенных разностей и таблицу значений
 def table(n):
     arr = []
-    print('{0:<4} {1:>11} {2:>11} {3:>11} {4:>11} {5:>11}'.format('x', 'f(x)', '\u0394y', '\u03942y', '\u03943y',
-                                                                  '\u03944y'))
+
     for i in range(int((b - a) / h + 1)):
         arr.append(f(a + i * h))
 
     diffs = delta(n, arr)
+
+    # делаем массивы diffs одинаковой длины
+    num = len(diffs[0])-1
+    for i in range(1,len(diffs)):
+        for j in range(len(diffs[i])-1,num):
+            diffs[i].append(math.nan)
+            j+=1
+
+    # создаем данные для таблицы
+    columns = ['f(x)', '\u0394y', '\u03942y', '\u03943y', '\u03944y']
+    data = {}
+    for i in range(len(diffs)):
+        data[columns[i]] = diffs[i]
+    indexes = []
     for j in range(len(arr)):
-        print(round(a + j * h, 1), end=' ')
-        # print('\t', arr[j], end=' ')
-        for i in range(len(diffs)):
-            if j < len(diffs[i]):
-                print('\t', diffs[i][j], end=' ')
-        print('')
+        indexes.append(round(a + j * h, 1))
+
+    df1 = pd.DataFrame(data, index = indexes)
+    df1.columns.name = 'x'
+    print(df1)
     return diffs
 
 
@@ -64,9 +82,6 @@ def polynomial(n, t, coefs):
 
     diffs = delta(n, arr)
 
-    '''for i in range(n + 1):
-        print(diffs[i])'''
-
     values[0] = diffs[0][len(diffs[0]) // 2]
     for i in range(1, n + 1):
         y = coefs[i]
@@ -74,19 +89,21 @@ def polynomial(n, t, coefs):
         y = round(y, 5)
         values[i] = values[i - 1] + y
 
+    difference = []
     for j in range(n + 1):
-        print('{0:<9} '.format(diffs[j][(len(diffs[0]) // 2) - (j // 2)]), end='')  # используемые разделенные разности
-    print('используемые разделенные разности ')
+        difference.append(diffs[j][(len(diffs[0]) // 2) - (j // 2)])  # используемые разделенные разности
+
+    p_coefs = []
     for j in range(n + 1):
-        print('{0:<9} '.format(round(coefs[j] * diffs[j][(len(diffs[0]) // 2) - (j // 2)], 5)), end='')
-    print('N_k * \u0394k(y0) ')
-    return values
+        p_coefs.append(round(coefs[j] * diffs[j][(len(diffs[0]) // 2) - (j // 2)], 5))
+
+    return difference, p_coefs, values
 
 
 # оценка модуля производной
 def estimate_mod_der(n):
     modules = [0] * (n + 1)
-    modules[0] = abs(derivative(f,a, dx=1.0, n=1, order=n + 3))
+    modules[0] = abs(derivative(f, a, dx=1.0, n=1, order=n + 3))
     for i in range(1, n + 1):
         c = a
         d = a + i * h
@@ -100,35 +117,38 @@ def estimate_mod_der(n):
 def estimate_err(modules, coefs):
     est_errors = [0] * (n + 1)
     for i in range(n + 1):
-        est_errors[i] = round(modules[i] * abs(coefs[i+1]) * h**(i+1),5)
+        est_errors[i] = round(modules[i] * abs(coefs[i + 1]) * h ** (i + 1), 5)
     return est_errors
 
 
 # main
-table(n)
+table(n)  # печать таблицы разделенных разностей
 
-print('\n')
-
+# нахждение итоговых результатов и печать таблицы
 t = (x - a) / h
-print('{0:<9} {1:<9} {2:<9} {3:<9} {4:<9}'.format('0', '1', '2', '3', '4'))
 
 coefs = coefficient(n, t)
-for i in range(n + 1):
-    print('{0:<9} '.format(coefs[i]), end='')  # печать коэффициентов полинома
-print('коэффициенты N_k полинома')
-
-values = polynomial(n, t, coefs)
-
+difference, p_coefs, values = polynomial(n, t, coefs)
+errors = []
 for j in range(n + 1):
-    print('{0:<9} '.format(values[j]), end='')  # печать значений полинома
-print('значения полинома')
-
-for j in range(n + 1):
-    print('{0:<9} '.format(round(f(x) - values[j], 5)), end='')  # печать фактической погрешности
-print('фактическая погрешность')
+    errors.append(round(f(x) - values[j], 5))  # нахождение фактической погршности
 
 modules = estimate_mod_der(n)
 est_errors = estimate_err(modules, coefs)
-for i in range(n + 1):
-    print('{0:<9} '.format(est_errors[i]), end='')  # печать оценки погрешности
-print('оценка погрешности')
+
+s1 = 'коэффициенты N_k полинома'
+s2 = 'используемые разделенные разности'
+s3 = 'N_k * \u0394k(y0) '
+s4 = 'значения полинома'
+s5 = 'фактическая погрешность'
+s6 = 'оценка погрешности'
+
+del coefs[len(coefs) - 1]  # убираем коэффициент, кт не требуется для вывода итоговой таблицы
+data = [coefs, difference, p_coefs, values, errors, est_errors]
+indexes = [s1, s2, s3, s4, s6, s6]
+
+df = pd.DataFrame(data, index=indexes, columns=[i for i in range(5)])
+df.columns.name = 'k'
+
+print('\n')
+print(df)

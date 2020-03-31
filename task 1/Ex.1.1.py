@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import pandas as pd
 from scipy.misc import derivative
 
 print('\n','Дана функция f(x)=cos(x)', '\n')
@@ -119,51 +120,34 @@ xx = []
 for i in X:
     xx.append(i[0])
 
-'''
-for i in X:
-    print(i)
 
-for i in range(len(xx)):
-    print(xx[i])
-print('\n')
-'''
-
+# main
 # печать таблицы разделенных разностей
 r1, r2, r3 = fun(xx)
+print('\n')
 printR(r1, r2, r3, xx)
 
-# печатаем итоговую таблицу
-print('\n')
-print('{0:<60}'.format('i'), end=' ')
-for i in range(n+1):
-    print('{0:^8}'.format(i),end=' ')
-print('\n')
-
-print('{0:<60}'.format('Узлы в порядке очередности их использования'), end=' ')
-for i in range(n+1):
-    print('{0:<8}'.format(xx[i]), end=' ')
-print('\n')
-
-print('{0:<60}'.format('P i (2) — значение многочлена в точке интерполирования'), end=' ')
+# печать итоговых таблиц
 values = polynomial(x, xx, r1, r2, r3)
-for i in range(n+1):
-    print('{:.5f}'.format(values[i]), end=' ')
-print('\n')
-
-print('{0:<60}'.format('f (2) − P i (2) — фактическая погрешность'), end=' ')
 errors = actual_err(x, f, values)
-for i in range(n+1):
-    print('{:.5f}'.format(errors[i]), end=' ')
-print('\n')
-
-print('{0:<60}'.format('M i+1 — оценка модуля производной'), end=' ')
 modules = estimate_mod_der(n, x, xx)
-for i in range(n+1):
-    print('{:.5f}'.format(modules[i]), end=' ')
-print('\n')
-
-print('{0:<60}'.format('R i (2) — оценка погрешности'), end=' ')
 est_errors = estimate_err(x, modules, xx)
-for i in range(n+1):
-    print('{:.5f}'.format(est_errors[i]), end=' ')
+
+# увеличиваем ширину печати dataframe
+pd.options.display.max_columns = 20
+desired_width = 400
+pd.set_option('display.width', desired_width)
+
 print('\n')
+data = [xx, values, errors, modules, est_errors]
+s1 = 'Узлы в порядке очередности их использования'
+s2 = 'P i (2) — значение многочлена в точке интерполирования'
+s3 = 'f (2) − P i (2) — фактическая погрешность'
+s4 = 'M i+1 — оценка модуля производной'
+s5 = 'R i (2) — оценка погрешности'
+indexes = [s1, s2, s3, s4, s5]
+
+df = pd.DataFrame(data, index=indexes, columns=[i for i in range(4)])
+df.columns.name = "i"
+
+print(df)
