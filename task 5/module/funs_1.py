@@ -1,5 +1,4 @@
 import math
-from scipy.misc import derivative
 
 
 # вычисляем значение функции в точке х
