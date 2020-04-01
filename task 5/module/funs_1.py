@@ -4,12 +4,12 @@ from scipy.misc import derivative
 
 # вычисляем значение функции в точке х
 def f(x):
-    return round(math.e**(2*x), 5)
+    return round(math.e**(3*x), 5)
 
 
 # вычисляем производную k порядка в точке х
 def der(x, k):
-    return round(derivative(f, x, dx=1.0, n=k), 5)
+    return round((3**k)*f(x), 5)
 
 
 # числ. дифф. 1 порядка, погрешность O(h)
