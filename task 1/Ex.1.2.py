@@ -145,6 +145,7 @@ s6 = 'оценка погрешности'
 
 del coefs[len(coefs) - 1]  # убираем коэффициент, кт не требуется для вывода итоговой таблицы
 data = [coefs, difference, p_coefs, values, errors, est_errors]
+
 indexes = [s1, s2, s3, s4, s6, s6]
 
 df = pd.DataFrame(data, index=indexes, columns=[i for i in range(5)])
