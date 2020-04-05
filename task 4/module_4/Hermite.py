@@ -48,7 +48,17 @@ def sep_diffs(dict, nodes):
 
 # создаем таблицу разделенных разностей
 def create_table(values, indexes):
-    df = pd.DataFrame(data=values, columns=indexes).fillna(' ').T
+    column = [
+        "$f(x)$",
+        "р.р. 1 пор",
+        "р.р. 2 пор",
+        "р.р. 3 пор",
+        "р.р. 4 пор",
+        "р.р. 5 пор",
+        "р.р. 6 пор"
+    ]
+    df = pd.DataFrame(data=values,index = column, columns=indexes).fillna(' ').T
+    df.columns.name = "$x$"
     return df
 
 
