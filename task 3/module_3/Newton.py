@@ -1,21 +1,15 @@
-import pandas as pd
-import math
-# увеличиваем ширину печати dataframe
-pd.options.display.max_columns = 20
-desired_width = 400
-pd.set_option('display.width', desired_width)
-
 
 def f(x):
-    return round(1/(1+x**2), 5)
+    return round(1 / (1 + x ** 2), 5)
 
 
-def newton_val(n, coefs):
+# вычисляем значение полинома степени n в точке х
+def newton_val(n, coefs, a, h):
     arr = []
     nodes = []
-    for i in range(n+1):
-        nodes.append(a + h * (i - n//2))
-        arr.append(f(a + h * (i - n//2)))
+    for i in range(n + 1):
+        nodes.append(a + h * (i - n // 2))
+        arr.append(f(a + h * (i - n // 2)))
 
     diffs = sep_diffs(arr, nodes)
 
@@ -33,13 +27,14 @@ def newton_val(n, coefs):
             values[i] = y
         else:
             values[i] = values[i - 1] + y
-        if sch%3 == 2:
+        if sch % 3 == 2:
             k -= 1
             sch = 0
 
-    return values
+    return values[n]
 
 
+# разделенные разности
 def sep_diffs(arr, nodes):
     RR1 = []
     for i in range(len(arr) - 1):
@@ -56,14 +51,11 @@ def sep_diffs(arr, nodes):
         vals = []
         for j in range(len(arr) - i):
             vals.append(
-                round((RR[i - 1][j + 1] - RR[i - 1][j]) , 5)
+                round((RR[i - 1][j + 1] - RR[i - 1][j]), 5)
             )
         RR.append(vals)
-
-    df = pd.DataFrame(data=RR, columns = nodes).fillna(' ').T
-    print(df)
-
     return RR
+
 
 # коэффициенты N_k для составления полинома
 def coefficient(n, t):
@@ -77,31 +69,4 @@ def coefficient(n, t):
     return coefs
 
 
-# main
-x = 0.15
-a, b = -1, 1
-h = 0.2  # шаг интерполирования
-n = 19  # порядок интерполирования
-
-# нахждение итоговых результатов и печать таблицы
-t = round((x - a) / h, 1)
-
-coefs = coefficient(n, t)
-value = newton_val(n, coefs)
-
-errors = []
-for j in range(n + 1):
-    errors.append(abs(round(f(x) - value[j], 5)))  # нахождение фактической погршности
-
-s1 = 'коэффициенты N_k полинома'
-s2 = 'значения полинома'
-s3 = 'фактическая погрешность'
-
-data = [coefs, value, errors]
-
-indexes = [s1, s2, s3]
-
-df = pd.DataFrame(data, index=indexes)
-
-print(df)
 
