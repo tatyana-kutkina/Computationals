@@ -28,24 +28,24 @@ def delta(n, arr):
         for i in range(len(arr) - k):
             arr1.append(round(diffs[k - 1][i + 1] - diffs[k - 1][i], 5))
         diffs.append(arr1)
+
     return diffs
 
 
 # считаем и печатаем таблицу разделенных разностей и таблицу значений
 def table(n):
     arr = []
-
     for i in range(int((b - a) / h + 1)):
         arr.append(f(a + i * h))
 
     diffs = delta(n, arr)
 
     # делаем массивы diffs одинаковой длины
-    num = len(diffs[0])-1
-    for i in range(1,len(diffs)):
-        for j in range(len(diffs[i])-1,num):
+    num = len(diffs[0]) - 1
+    for i in range(1, len(diffs)):
+        for j in range(len(diffs[i]) - 1, num):
             diffs[i].append(math.nan)
-            j+=1
+            j += 1
 
     # создаем данные для таблицы
     columns = ['f(x)', '\u0394y', '\u03942y', '\u03943y', '\u03944y']
@@ -56,10 +56,9 @@ def table(n):
     for j in range(len(arr)):
         indexes.append(round(a + j * h, 1))
 
-    df1 = pd.DataFrame(data, index = indexes)
+    df1 = pd.DataFrame(data, index=indexes)
     df1.columns.name = 'x'
     print(df1)
-    return diffs
 
 
 def coefficient(n, t):
@@ -146,7 +145,7 @@ s6 = 'оценка погрешности'
 del coefs[len(coefs) - 1]  # убираем коэффициент, кт не требуется для вывода итоговой таблицы
 data = [coefs, difference, p_coefs, values, errors, est_errors]
 
-indexes = [s1, s2, s3, s4, s6, s6]
+indexes = [s1, s2, s3, s4, s5, s6]
 
 df = pd.DataFrame(data, index=indexes, columns=[i for i in range(5)])
 df.columns.name = 'k'
