@@ -36,7 +36,7 @@ def Newton_method(xk, yk, eps, kmax, f, g, dfx, dfy, dgx, dgy):
     columns = [
         "$x_k$",
         "$y_k$",
-        "$||(x_k − x_{k−1} , y_k − y_{k−1} )||$",
+        "$\|(x_k − x_{k−1} , y_k − y_{k−1} )\|$",
         "$f(x_k, y_k)$",
         "$g(x_k, y_k)$"
     ]
