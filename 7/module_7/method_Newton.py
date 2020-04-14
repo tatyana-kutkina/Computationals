@@ -36,7 +36,7 @@ def Newton_method(xk, yk, eps, kmax, f, g, dfx, dfy, dgx, dgy):
     columns = [
         "$x_k$",
         "$y_k$",
-        "norma",
+        "$norma$",
         "$f(x_k, y_k)$",
         "$g(x_k, y_k)$"
     ]
