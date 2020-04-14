@@ -1,5 +1,5 @@
 import pandas as pd
-from math import sin, cos, sqrt
+from math import sqrt
 
 
 def Newton_method(xk, yk, eps, kmax, f, g, dfx, dfy, dgx, dgy):
